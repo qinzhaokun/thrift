@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="serviceMap" class="org.springframework.beans.factory.config.MapFactoryBean">
+        <property name="sourceMap">
+            <map>
+                <entry key="http://service.qinzhaokun.com//UserService_1.0.0"
+                       value-ref="userServiceProcess" />
+            </map>
+        </property>
+    </bean>
+
+    <bean class="proxy.server.ServiceRegister" init-method="init">
+        <property name="port" value="4000" />
+        <property name="services">
+            <ref local="serviceMap"/>
+        </property>
+    </bean>
+
+    <bean id="iUserService" class="server.UserServiceImpl">
+    </bean>
+    
+    <bean id="userServiceProcess" class="com.qinzhaokun.thrift.IUserService.Processor">
+        <constructor-arg>
+            <ref bean="iUserService" />
+        </constructor-arg>
+    </bean>
+</beans>
